@@ -20,6 +20,7 @@ import { Route as ToyPathlessImport } from './routes/toy/_pathless'
 
 const ToyImport = createFileRoute('/toy')()
 const PathlessIndexLazyImport = createFileRoute('/_pathless/')()
+const ToyPathlessMouseLazyImport = createFileRoute('/toy/_pathless/mouse')()
 const ToyPathlessFishLazyImport = createFileRoute('/toy/_pathless/fish')()
 
 // Create/Update Routes
@@ -39,18 +40,30 @@ const PathlessIndexLazyRoute = PathlessIndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PathlessRoute,
-} as any).lazy(() => import('./routes/_pathless.index.lazy').then(d => d.Route))
+} as any).lazy(() =>
+  import('./routes/_pathless.index.lazy').then((d) => d.Route),
+)
 
 const ToyPathlessRoute = ToyPathlessImport.update({
   id: '/_pathless',
   getParentRoute: () => ToyRoute,
 } as any)
 
+const ToyPathlessMouseLazyRoute = ToyPathlessMouseLazyImport.update({
+  id: '/mouse',
+  path: '/mouse',
+  getParentRoute: () => ToyPathlessRoute,
+} as any).lazy(() =>
+  import('./routes/toy/_pathless.mouse.lazy').then((d) => d.Route),
+)
+
 const ToyPathlessFishLazyRoute = ToyPathlessFishLazyImport.update({
   id: '/fish',
   path: '/fish',
   getParentRoute: () => ToyPathlessRoute,
-} as any).lazy(() => import('./routes/toy/_pathless.fish.lazy').then(d => d.Route))
+} as any).lazy(() =>
+  import('./routes/toy/_pathless.fish.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -91,6 +104,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToyPathlessFishLazyImport
       parentRoute: typeof ToyPathlessImport
     }
+    '/toy/_pathless/mouse': {
+      id: '/toy/_pathless/mouse'
+      path: '/mouse'
+      fullPath: '/toy/mouse'
+      preLoaderRoute: typeof ToyPathlessMouseLazyImport
+      parentRoute: typeof ToyPathlessImport
+    }
   }
 }
 
@@ -104,17 +124,23 @@ const PathlessRouteChildren: PathlessRouteChildren = {
   PathlessIndexLazyRoute: PathlessIndexLazyRoute,
 }
 
-const PathlessRouteWithChildren = PathlessRoute._addFileChildren(PathlessRouteChildren)
+const PathlessRouteWithChildren = PathlessRoute._addFileChildren(
+  PathlessRouteChildren,
+)
 
 interface ToyPathlessRouteChildren {
   ToyPathlessFishLazyRoute: typeof ToyPathlessFishLazyRoute
+  ToyPathlessMouseLazyRoute: typeof ToyPathlessMouseLazyRoute
 }
 
 const ToyPathlessRouteChildren: ToyPathlessRouteChildren = {
   ToyPathlessFishLazyRoute: ToyPathlessFishLazyRoute,
+  ToyPathlessMouseLazyRoute: ToyPathlessMouseLazyRoute,
 }
 
-const ToyPathlessRouteWithChildren = ToyPathlessRoute._addFileChildren(ToyPathlessRouteChildren)
+const ToyPathlessRouteWithChildren = ToyPathlessRoute._addFileChildren(
+  ToyPathlessRouteChildren,
+)
 
 interface ToyRouteChildren {
   ToyPathlessRoute: typeof ToyPathlessRouteWithChildren
@@ -131,12 +157,14 @@ export interface FileRoutesByFullPath {
   '/toy': typeof ToyPathlessRouteWithChildren
   '/': typeof PathlessIndexLazyRoute
   '/toy/fish': typeof ToyPathlessFishLazyRoute
+  '/toy/mouse': typeof ToyPathlessMouseLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/toy': typeof ToyPathlessRouteWithChildren
   '/': typeof PathlessIndexLazyRoute
   '/toy/fish': typeof ToyPathlessFishLazyRoute
+  '/toy/mouse': typeof ToyPathlessMouseLazyRoute
 }
 
 export interface FileRoutesById {
@@ -146,14 +174,22 @@ export interface FileRoutesById {
   '/toy/_pathless': typeof ToyPathlessRouteWithChildren
   '/_pathless/': typeof PathlessIndexLazyRoute
   '/toy/_pathless/fish': typeof ToyPathlessFishLazyRoute
+  '/toy/_pathless/mouse': typeof ToyPathlessMouseLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/toy' | '/' | '/toy/fish'
+  fullPaths: '' | '/toy' | '/' | '/toy/fish' | '/toy/mouse'
   fileRoutesByTo: FileRoutesByTo
-  to: '/toy' | '/' | '/toy/fish'
-  id: '__root__' | '/_pathless' | '/toy' | '/toy/_pathless' | '/_pathless/' | '/toy/_pathless/fish'
+  to: '/toy' | '/' | '/toy/fish' | '/toy/mouse'
+  id:
+    | '__root__'
+    | '/_pathless'
+    | '/toy'
+    | '/toy/_pathless'
+    | '/_pathless/'
+    | '/toy/_pathless/fish'
+    | '/toy/_pathless/mouse'
   fileRoutesById: FileRoutesById
 }
 
@@ -167,7 +203,9 @@ const rootRouteChildren: RootRouteChildren = {
   ToyRoute: ToyRouteWithChildren,
 }
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -195,7 +233,8 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "toy/_pathless.tsx",
       "parent": "/toy",
       "children": [
-        "/toy/_pathless/fish"
+        "/toy/_pathless/fish",
+        "/toy/_pathless/mouse"
       ]
     },
     "/_pathless/": {
@@ -204,6 +243,10 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/toy/_pathless/fish": {
       "filePath": "toy/_pathless.fish.lazy.tsx",
+      "parent": "/toy/_pathless"
+    },
+    "/toy/_pathless/mouse": {
+      "filePath": "toy/_pathless.mouse.lazy.tsx",
       "parent": "/toy/_pathless"
     }
   }

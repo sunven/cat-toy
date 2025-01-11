@@ -6,9 +6,9 @@ export const toyList = [
     url: '/toy/fish',
   },
   {
-    title: '鱼',
+    title: '老鼠',
     description: '',
-    img: '/toy-images/fish.gif',
-    url: '/toy/fish',
+    img: '/toy-images/mouse.gif',
+    url: '/toy/mouse',
   },
 ]
