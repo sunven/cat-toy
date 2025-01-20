@@ -1,19 +1,14 @@
 import ShinyButton from '@/components/ui/shiny-button'
-import { createFileRoute, Outlet, useRouter } from '@tanstack/react-router'
+import { Outlet, useNavigate } from 'react-router'
 
-export const Route = createFileRoute('/toy/_pathless')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  const router = useRouter()
-
+export default function DetailLayout() {
+  const navigate = useNavigate()
   return (
     <div>
       <div className="fixed top-0 left-0 z-10 m-2">
         <ShinyButton
           onClick={() => {
-            router.history.push('/')
+            navigate('/')
           }}
         >
           {'<'} Back

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from 'react-router'
 import { toyList } from './data'
 import ShineBorder from '@/components/ui/shine-border'
 
