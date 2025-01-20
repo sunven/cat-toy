@@ -7,16 +7,14 @@ import DetailLayout from './layouts/DetailLayout'
 
 export default function App() {
   return (
-    <>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-        </Route>
-        <Route path="toy" element={<DetailLayout />}>
-          <Route path="fish" element={<Fish />} />
-          <Route path="mouse" element={<Mouse />} />
-        </Route>
-      </Routes>
-    </>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+      </Route>
+      <Route path="toy" element={<DetailLayout />}>
+        <Route path="fish" element={<Fish />} />
+        <Route path="mouse" element={<Mouse />} />
+      </Route>
+    </Routes>
   )
 }
